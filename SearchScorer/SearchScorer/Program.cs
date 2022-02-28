@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.Azure.Search;
 using SearchScorer.Common;
 using Humanizer;
@@ -22,7 +16,9 @@ namespace SearchScorer
         {
             ServicePointManager.DefaultConnectionLimit = 64;
 
-            var assemblyDir = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            var assemblyDir = Path.GetDirectoryName(Environment.CurrentDirectory);
+            assemblyDir = Path.Combine(assemblyDir, "files");
+
             var settings = new SearchScorerSettings
             {
                 ControlBaseUrl = "https://azuresearch-usnc.nuget.org/",
@@ -32,32 +28,32 @@ namespace SearchScorer
                 FeedbackSearchQueriesCsvPath = Path.Combine(assemblyDir, "FeedbackSearchQueries.csv"),
                 CuratedSearchQueriesCsvPath = Path.Combine(assemblyDir, "CuratedSearchQueries.csv"),
                 ClientCuratedSearchQueriesCsvPath = Path.Combine(assemblyDir, "ClientCuratedSearchQueries.csv"),
-                TopSearchQueriesCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\TopSearchQueries-90d-organic-2020-10-19.csv",
-                TopClientSearchQueriesCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\TopClientSearchQueries-45d-2020-10-19.csv",
-                GoogleAnalyticsSearchReferralsCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\GoogleAnalyticsSearchReferrals-empty.csv",
+                TopSearchQueriesCsvPath = Path.Combine(assemblyDir, "TopSearchQueries-90d-organic-2020-10-19.csv"),
+                TopClientSearchQueriesCsvPath = Path.Combine(assemblyDir, "TopClientSearchQueries-45d-2020-10-19.csv"),
+                GoogleAnalyticsSearchReferralsCsvPath = Path.Combine(assemblyDir, "GoogleAnalyticsSearchReferrals-empty.csv"),
 
                 // Used for the "convert-csv" command
-                TopSearchSelectionsCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\TopSearchSelections-90d-2020-10-19.csv",
-                GitHubUsageJsonPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\GitHubUsage.v1-2019-08-06.json",
-                GitHubUsageCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\GitHubUsage.v1-2019-08-06.csv",
-                TopSearchSelectionsV2CsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\TopSearchSelectionsV2-90d-2020-10-19.csv",
+                TopSearchSelectionsCsvPath = Path.Combine(assemblyDir, "TopSearchSelections-90d-2020-10-19.csv"),
+                GitHubUsageJsonPath = Path.Combine(assemblyDir, "GitHubUsage.v1-2019-08-06.json"),
+                GitHubUsageCsvPath = Path.Combine(assemblyDir, "GitHubUsage.v1-2019-08-06.csv"),
+                TopSearchSelectionsV2CsvPath = Path.Combine(assemblyDir, "TopSearchSelectionsV2-90d-2020-10-19.csv"),
 
                 // Used for the "hash-queries" command.
-                TopV3SearchQueriesPathPattern = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\TopV3SearchQueries-90d-p*-2020-10-19.csv",
-                HasherKeyFile = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\HasherKey.txt",
-                HashedSearchQueryLookupCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\HashedSearchQueries-2020-10-19.csv",
+                TopV3SearchQueriesPathPattern = Path.Combine(assemblyDir, "TopV3SearchQueries-90d-p*-2020-10-19.csv"),
+                HasherKeyFile = Path.Combine(assemblyDir, "HasherKey.txt"),
+                HashedSearchQueryLookupCsvPath = Path.Combine(assemblyDir, "HashedSearchQueries-2020-10-19.csv"),
 
                 // The following settings are only necessary if running the "probe" command.
                 AzureSearchServiceName = "",
                 AzureSearchIndexName = "",
                 AzureSearchApiKey = "",
-                ProbeResultsCsvPath = @"C:\Users\jver\OneDrive - Microsoft\search-scorer\ProbeResults.csv",
+                ProbeResultsCsvPath = Path.Combine(assemblyDir, "ProbeResults.csv"),
 
                 PackageIdWeights = CreateRange(lower: 1, upper: 10, increments: 3),
                 TokenizedPackageIdWeights = CreateRange(lower: 1, upper: 10, increments: 3),
                 TagsWeights = CreateRange(lower: 1, upper: 10, increments: 3),
                 DownloadWeights = CreateRange(lower: 1000, upper: 30000, increments: 5000),
-            }; 
+            };
 
             using (var httpClientHandler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip })
             using (var httpClient = new HttpClient())

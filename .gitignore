@@ -20,6 +20,7 @@ local.settings.json
 /tools/network/assets/*.node
 /tools/network/node_modules/
 /tools/network/nuget-network-diagnostics*
+/SearchScorer/SearchScorer/files
 
 # nuget
 */gpf/
